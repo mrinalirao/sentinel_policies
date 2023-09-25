@@ -1,8 +1,4 @@
 param threshold_value
 main = rule {
-  if 10 > threshold_value {
-    violation {
-      message = "Input value exceeds the threshold"
-    }
-  }
+  10 > threshold_value
 }
