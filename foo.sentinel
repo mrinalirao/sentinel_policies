@@ -1,4 +1,5 @@
 param threshold_value
+// [foo] All server resources should have an instance type of 't2.small', 't2.medium', or 't2.large'.
 main = rule {
   10 > threshold_value
 }
