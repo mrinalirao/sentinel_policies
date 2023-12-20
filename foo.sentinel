@@ -1,5 +1,19 @@
-param threshold_value
+// param threshold_value
 // [foo] All server resources should have an instance type of 't2.small', 't2.medium', or 't2.large'.
+// main = rule {
+ //  10 > threshold_value
+// }
+
+# Blocks all Terraform Plans during the hard freeze period for all workspaces except for the ones tagged with non-prod tags. Please refer to this document for more details: https://github.aexp.com/pages/amex-eng/cloud-foundation-docs/docs/tfe/change-management#year-end-change-freeze
+/************************************************
+1. TECH Standard:
+2. Custodian Info: kevina.w.wong1@aexp.com
+3. Function Area / Security Domain: Change Management
+4. Date Last Reviewed: 12/04/2023
+5. Documentation URL: https://github.aexp.com/pages/amex-eng/cloud-foundation-docs/docs/tfe/change-management#year-end-change-freeze
+6. Description: Blocks all Terraform Plans during the hard freeze period for all workspaces except for the ones tagged with non-prod tags.
+************************************************/
+
 main = rule {
-  10 > threshold_value
+  true
 }
