@@ -7,9 +7,40 @@
 5. Documentation URL: https://github.aexp.com/pages/amex-eng/cloud-foundation-docs/docs/tfe/change-management#year-end-change-freeze
 6. Description: Blocks all Terraform Plans during the hard freeze period for all workspaces except for the ones tagged with non-prod tags.
 ************************************************/
-
-
+import "tfplan-functions" as plan
+import "tfrun-functions" as run
+import "time" as time
+param times
+resource_changes = plan.get_num_resource_changed()
+exceptions = ["REDACTED"]
+is_exempt = rule {(run.find_project_name() in exceptions)}
+# Criteria 1: Workspace Applies are blocked for all workspaces except for the ones tagged with non-prod tags
+contains_any = func (list, input) {
+    for list as item {
+        if item in input {
+            return true
+        }
+    }
+    return false
+}
+wkspc_tags = run.get_workspace_tags()
+not_enforced_tags = ["REDACTED"]
+enforced = rule {not contains_any(not_enforced_tags, wkspc_tags) and (resource_changes > 0)}
+# Criteria 2: Check if the run is within the hard freeze period
+within_timeframe = func(start, end, input_time){
+    return (time.load(start).before(input_time)) and (time.load(end).after(input_time))
+}
+run_time = time.load(run.get_time())
+within_time_any = func (timeframes, run_time) {
+    for timeframes as time {
+        if within_timeframe(time.start, time.end, run_time){
+            return true
+        }
+    }
+    return false
+}
+hard_freeze = rule {within_time_any(times, run_time)}
 # Blocks all Terraform Plans during the hard freeze period for all workspaces except for the ones tagged with non-prod tags. Please refer to this document for more details: https://github.aexp.com/pages/amex-eng/cloud-foundation-docs/docs/tfe/change-management#year-end-change-freeze
 main = rule {
-  true
+    (not (enforced and hard_freeze)) or (is_exempt)
 }
