@@ -7,11 +7,17 @@
 5. Documentation URL: https://github.aexp.com/pages/amex-eng/cloud-foundation-docs/docs/tfe/change-management#year-end-change-freeze
 6. Description: Blocks all Terraform Plans during the hard freeze period for all workspaces except for the ones tagged with non-prod tags.
 ************************************************/
-import "time" as time
+/* import "time" as time
 
 print(time.now)
 
 # Blocks all Terraform Plans during the hard freeze period for all workspaces except for the ones tagged with non-prod tags. Please refer to this document for more details: https://github.aexp.com/pages/amex-eng/cloud-foundation-docs/docs/tfe/change-management#year-end-change-freeze
 main = rule {
     false
+} */
+
+param version
+
+main = rule {
+   print(version)
 }
