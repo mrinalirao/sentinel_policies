@@ -19,5 +19,5 @@ main = rule {
 param version
 
 main = rule {
-   print(version[0].v)
+   print(version.v)
 }
